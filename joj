@@ -1,0 +1,136 @@
+As Activities são componentes que permitem a apresentação de uma tela ao usuário. Elas contém descrições de todos os componentes apresentados, como botões, texto, imagens, vídeos, enfim, todos os elementos exibidos na tela. Apesar de haver a possibilidade de configurar os elementos e sua disposição através de código em Java, é extremamente recomendado que isso seja feito através de um arquivo XML. A utilização do XML fornece uma maneira simples e organizada de trabalhar com a interface gráfica. Mas você prefere construir a interface do seu app só arrastando os componentes para dentro da tela, não é? Muito bem, a única diferença nesse caso é que o Android Studio faz o trabalho de atualizar automaticamente o arquivo XML referente à Activity. Você pode alternar entre os modos de edição gráfico e texto clicando em Design ou Text, respectivamente, quando estiver constuindo a interface do seu app.
+
+Além disso, as Activities contém descrições acerca das ações a serem realizadas quando o usuário interage com os componentes. Aqui entra o código em Java contido em uma subclasse de Activity. Quando você cria um projeto e escolhe iniciar com uma Activity vazia (Blank Activity), o Android Studio cria automaticamente um arquivo XML com “Hello World” e o arquivo MainActivity.java, que contém uma subclasse de Activity. Veja os métodos que essa classe possui.
+
+onCreate(): executado logo antes de a Activity ser exibida na tela. Aqui você pode adicionar configurações que devem acontecer antes de o usuário ter uma impressão visual da Activity.
+
+onCreateOptionsMenu(): executado quando o usuário solicita o menu de opções. Se você apagá-lo, quando o usuário solicitar o menu, nada acontece.
+
+onOptionsItemSelected(): executado quando o usuário seleciona um item do menu de opções. Se você não adicionar instruções aqui, quando um item for selecionado, nada acontece.
+
+Activities possuem muitos outros métodos que você pode sobrescrever (aquele @override). A documentação da classe Activity especifica todos esses métodos e suas funções. Veja também esse fluxograma que mostra o ciclo de vida de uma Activity, indicando quais métodos são executados e em quais momentos. Opa!
+
+Agora vamos ao ponto principal do post. Seu app provavelmente não vai ter apenas uma tela. Isso significa que você terá que criar várias Activities e fazer a transição de uma para outra.
+
+Vamos aprender a alternar entre Activities!
+
+
+Vou supor que você já tem uma vaga ideia de como arrastar os elementos para a tela ou editar o arquivo XML para fazer o design da sua Activity. Você pode criar qualquer visual, mas, para melhor guiar esse tutorial, vamos utilizar a seguinte tela.
+
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    tools:context=".MainActivity"
+    android:background="#ff6eb6ff"
+    android:onClick="startSecondActivity">
+ 
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="DRAGÃO"
+        android:id="@+id/textView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/abc_text_size_display_3_material"
+        android:textColor="#ffffffff" />
+</RelativeLayout>
+
+
+Nossa primeira Activity foi criada. Ela apenas contém um elemento de texto TextView no centro. A linha de maior interesse para nós, por enquanto, é a linha 12. O parâmetro android:onClick define que método da Activity é executado quando o usuário clica sobre um elemento. Neste caso, o parâmetro está aplicado ao RelativeLayout, que aqui assume toda a área da tela. A linha 12 faz com que o método startSecondActivity() seja executado sempre que o usuário clicar em qualquer lugar da tela. But wait! Esse método ainda não existe. E nem a segunda Activity. Então vamos trabalhar nisso agora.
+
+Primeiramente, sobre o método startSecondActivity(). Esse método deve pertencer à classe MainActivity. Então vá ao arquivo Java que representa essa Activity e adicione o seguinte método à classe.
+
+
+public void startSecondActivity(View view) {
+ 
+    Intent secondActivity = new Intent(this, SecondActivity.class);
+    startActivity(secondActivity);
+}
+
+As duas linhas contidas no método acima são o núcleo do processo de transição entre telas no Android.
+
+A classe Intent é uma descrição abstrata que representa uma operação a ser realizada. Intents são usados para transição de Activities, solicitação de serviços de outros aplicativos (câmera, compartilhamento em redes sociais…), comunicação de broadcasts, entre outros processos.
+
+Veja a linha 3, que declara uma instância de Intent. Para iniciar outra Activity, o construtor da classe leva dois parâmetros: o contexto da Activity atual e a classe da Activity a ser iniciada. O objeto Intent criado leva consigo todas as informações necessárias para iniciar a próxima Activity. E, finalmente, o método startActivity() excuta a operações descrita no Intent. Nova Activity na tela, aê! Opa, precisamos criar a nova Activity.
+
+O Android Studio facilita a adição de uma Activity ao projeto. Basta entrar na aba Project → Android.
+
+
+Um clique com o botão direito do mouse em app e então New → Activity. Você terá alguns exemplos de Activities já implementadas. Você pode escolher qualquer uma delas, mas como gosto de um pouco de minimalismo, geralmente adiciono a Activity vazia, Blank Activity.
+
+
+Com isso, temos um novo arquivo XML e a classe da Activity recém-criada. Pronto. Pode fazer o teste do app. Quando você clicar na primeira tela, a segunda será carregada e exibida!
+
+Mas para deixar tudo mais bonito. Modifique a interface gráfica da segunda Activity e deixe-a como a seguir.
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    tools:context=".MainActivity"
+    android:background="#ff0fffab">
+ 
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="SEM"
+        android:id="@+id/textView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/abc_text_size_display_3_material"
+        android:textColor="#ffffffff" />
+</RelativeLayout>
+
+Fim! Você fez, com sucesso, a transição entre duas telas dentro de seu app. Como exercício, tente adicionar uma terceira Activity! Para completar o exemplo, exiba no app uma terceira tela, quando o usuário clicar na segunda tela.
+
+Agora, suponha que você tem uma tela de cadastro, onde o usuário digita suas informações e depois vai para a próxima tela. Suponha também que queremos capturar as informações inseridas na Activity de cadastro e transferi-las para a próxima Activity. De forma mais geral, se você deseja transferir dados de uma Activity para outra, existe uma maneira simples de fazer isso. Veja o seguinte trecho de código
+
+
+String name = "Dragão";
+int age = 100;
+byte[] random = {99, 104, 97, 109, 97};
+ 
+Intent nextActivity = new Intent(this, NextActivity.class);
+nextActivity.putExtra("my_name", name);
+nextActivity.putExtra("my_age", age);
+nextActivity.puExtra("random", random);
+startActivity(nextActivity);
+Dados são passados para outra Activity através do objeto Intent que a inicia. O que fazemos é empacotar os valores que desejamos transmitir dentro do Intent usando os diversos métodos putExtra(), que levam dois parâmetros, uma chave que identifica o valor e o próprio valor. A chave será usada na outra Activity para resgatar o que foi transmitido. Veja o código que deve ser adicionado à nova Activity para recuperar os valores:
+
+Transferindo dados entre ActivitiesJava
+Intent intent = getIntent();
+String name = intent.getStringExtra("my_name");
+int age = intent.getIntExtra("my_age", 0);
+byte[] random = intent.getByteArrayExtra("random");
+1
+2
+3
+4
+Intent intent = getIntent();
+String name = intent.getStringExtra("my_name");
+int age = intent.getIntExtra("my_age", 0);
+byte[] random = intent.getByteArrayExtra("random");
+O método getIntent() recupera o Intent que iniciou a Activity. Depois, os métodos getStringExtra(), getIntExtra() e getByteArrayExtra() são usados com suas respectivas chaves para resgatar os valores. Note que existe um desses métodos para cada tipo de dado do Java, além de alguns para classes muito utilizadas.
+
+.
+
+Então acredito que aprendemos algo sobre Activities, como alternar entre várias telas em um app Android e como transmitir dados de uma Activity para outra. Muito bem, mas, caso tudo dê errado, confira o código completo do app Super Activities no github. Você pode baixar o projeto e importá-lo no Android Studio ou mesmo visualizar tudo no github.
+
+E isso é tudo por enquanto, pessoal.
+
